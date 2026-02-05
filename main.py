@@ -1,59 +1,36 @@
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-from schemas import ScamRequest, ScamResponse
-from scam_agent import detect_scam
+from pydantic import BaseModel
+from typing import List, Dict
 
-app = FastAPI(title="RakshakAI – Scam Detection API")
+app = FastAPI(title="CallShield AI – Scam Detection API")
 
-# -------------------------------
-# CORS (safe for hackathon bots)
-# -------------------------------
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 
-# -------------------------------
-# GET / (health check)
-# -------------------------------
-@app.get("/")
-def home():
-    return {"status": "RakshakAI running"}
+# -------- Request Model (MATCHES HACKATHON PAYLOAD) --------
+class DetectRequest(BaseModel):
+    sessionId: str
+    message: Dict        # sender, text, timestamp
+    conversationHistory: List = []
+    metadata: Dict
 
-# --------------------------------------------------
-# POST /  ✅ HACKATHON REQUIRED ROOT ENDPOINT
-# --------------------------------------------------
-@app.post("/")
-def hackathon_entry(payload: dict):
-    """
-    Impact AI Hackathon compatibility endpoint
-    Accepts any valid JSON payload and returns
-    the exact expected response format.
-    """
+
+# -------- API ENDPOINT --------
+@app.post("/detect")
+def detect_scam(data: DetectRequest):
+    # Extract scam text
+    scam_text = data.message.get("text", "")
+
+    # 👉 Your scam logic / AI model can be here
+    # (for now, static reply is acceptable for hackathon testing)
+    reply_text = "Why is my account being suspended?"
+
     return {
         "status": "success",
-        "reply": "Why is my account being suspended?"
+        "reply": reply_text
     }
 
-# --------------------------------------------------
-# POST /detect  (your original logic – keep it)
-# --------------------------------------------------
-@app.post("/detect", response_model=ScamResponse)
-def detect(request: ScamRequest):
-    """
-    Deploy-safe detect endpoint
-    (Database temporarily disabled)
-    """
 
-    # No DB usage during hackathon testing
-    history = []
-
-    # Scam detection logic
-    result = detect_scam(request.message, history)
-
-    # Return clean JSON
-    return result.model_dump()
+# -------- Root endpoint (optional but safe) --------
+@app.get("/")
+def home():
+    return {"status": "running", "service": "CallShield AI"}
 
