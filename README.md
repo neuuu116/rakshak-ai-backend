@@ -79,6 +79,12 @@ uvicorn main:app --reload
 
 # Open frontend
 open frontend/index.html
-  
+
+---
+## 🌐 Live Demo
+- Frontend: https://stunning-sunflower-568048.netlify.app
+- Backend API: https://rakshak-ai-backend-3t33.onrender.com
+
+---  
 👩‍💻 Author
 Neha Mhatre – Aspiring full‑stack developer building AI‑powered web applications
