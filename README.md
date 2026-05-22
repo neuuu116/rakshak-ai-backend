@@ -1,178 +1,84 @@
-# Rakshak AI – Scam Detection Backend
+# 🚨 Rakshak AI – Scam Detection System
 
-Rakshak AI is a **FastAPI-based backend service** designed to detect and analyze scam or fraudulent messages using AI-driven logic. This repository contains the backend implementation with a clean, modular structure and is built to be deployment-ready.
-
----
-
-## 🚀 Features
-
-* Scam / fraud message detection API
-* Built with **FastAPI** (high-performance Python web framework)
-* Modular backend architecture (DB, models, schemas, agents)
-* MySQL database support (disabled for production deployment when required)
-* Auto-generated API docs using Swagger UI
-* Production-ready structure for cloud deployment
+Rakshak AI is an **AI-powered web application** designed to detect scam and phishing messages in real-time.  
+Built with **FastAPI (backend)** and **TailwindCSS (frontend)**, it provides a modern UI with scanning animations, confidence scoring, and actionable security tips.
 
 ---
 
-## 🧠 Tech Stack
+## 📌 Project Evolution
 
-* **Backend Framework:** FastAPI
-* **Language:** Python 3
-* **Database:** MySQL (optional / environment-based)
-* **ORM / DB Connector:** mysql-connector-python
-* **API Documentation:** Swagger (OpenAPI)
+### 🔹 Version v1
+- Minimal FastAPI backend with a single `/detect` endpoint.
+- Static response for demo purposes.
+- No frontend, tested via Swagger UI.
+
+### 🔹 Version v2 (Current)
+- **Backend**:
+  - Structured FastAPI app (`main.py`, `schemas.py`, `scam_agent.py`, `models.py`, `db.py`).
+  - Rule-based scam detection with regex + confidence scoring.
+  - Rich response schema (`is_scam`, `risk_level`, `reason`, `confidence`, `timestamp`, `suggested_action`).
+  - Database layer with SQLAlchemy + Alembic migrations.
+  - CORS middleware for frontend integration.
+
+- **Frontend**:
+  - TailwindCSS + glassmorphism design.
+  - Scanning animation, glowing button, bottom navigation icons.
+  - Hybrid detection logic: tries backend API, falls back to demo mode if backend offline.
+
+- **Deployment Prep**:
+  - Requirements.txt updated with ORM + migrations.
+  - Dockerfile + docker-compose planned for containerization.
 
 ---
 
-## 📂 Project Structure
+## ⚙️ Tech Stack
 
-```
-rakshak-ai-backend/
-│
-├── main.py          # FastAPI app entry point
-├── db.py            # Database connection logic
-├── models.py        # Database CRUD operations
-├── schemas.py       # Pydantic request/response schemas
-├── scam_agent.py    # Scam detection logic / AI agent
-├── requirements.txt # Project dependencies
-├── .gitignore
-└── README.md
-```
+- **Backend**: [FastAPI](ca://s?q=FastAPI_backend), [SQLAlchemy](ca://s?q=SQLAlchemy), [Alembic](ca://s?q=Alembic_migrations), [MySQL](ca://s?q=MySQL_database)
+- **Frontend**: [TailwindCSS](ca://s?q=TailwindCSS_frontend), Vanilla JS
+- **Other Tools**: Docker (planned), Google Generative AI (future integration)
 
 ---
 
-## ⚙️ Setup Instructions (Local)
+## 🚀 How It Works
 
-### 1️⃣ Clone the Repository
+1. User pastes a suspicious message in the frontend.
+2. Frontend sends request to backend `/detect`.
+3. Backend runs scam detection → returns structured response.
+4. Frontend displays result with color coding, icons, and suggested action.
+5. If backend is offline, demo logic runs locally in JS.
+
+---
+
+## 📈 Roadmap (Future v3+)
+
+- [Risk Meter](ca://s?q=Add_risk_meter_UI): Animated progress bar for confidence score.
+- [History Tab](ca://s?q=Add_history_tab_UI): Store past scans in DB, show them in frontend.
+- [Security Tips](ca://s?q=Add_security_tips_UI): Contextual advice when scam detected.
+- [AI Upgrade](ca://s?q=Google_Generative_AI): Smarter detection beyond regex.
+- [Deployment](ca://s?q=Render_deployment): Push to Render/Railway/Azure for live demo.
+- [Mobile App](ca://s?q=React_Native): Wrap frontend in React Native for iOS/Android.
+
+---
+
+## 🛠️ Setup Instructions
 
 ```bash
-git clone https://github.com/neuuu116/rakshak-ai-backend.git
-cd rakshak-ai-backend
-```
+# Clone repo
+git clone https://github.com/<your-username>/rakshak_ai.git
+cd rakshak_ai
 
-### 2️⃣ Create Virtual Environment (Optional but Recommended)
-
-```bash
+# Create virtual environment
 python3 -m venv venv
-source venv/bin/activate  # macOS/Linux
-venv\Scripts\activate     # Windows
-```
+source venv/bin/activate
 
-### 3️⃣ Install Dependencies
-
-```bash
+# Install dependencies
 pip install -r requirements.txt
-```
 
-### 4️⃣ Environment Variables
-
-Create a `.env` file (for local DB usage):
-
-```
-DB_HOST=localhost
-DB_USER=your_username
-DB_PASSWORD=your_password
-DB_NAME=rakshak_ai
-```
-
-> ⚠️ For production deployment, local DB usage can be disabled.
-
----
-
-## ▶️ Run the Application
-
-```bash
+# Run backend
 uvicorn main:app --reload
-```
 
-* API Base URL: `http://127.0.0.1:8000`
-* Swagger Docs: `http://127.0.0.1:8000/docs`
-* OpenAPI JSON: `http://127.0.0.1:8000/openapi.json`
-
----
-
-## 📡 API Endpoints
-
-### 🔹 Home
-
-```
-GET /
-```
-
-Returns API status message.
-
-### 🔹 Detect Scam Message
-
-```
-POST /detect
-```
-
-**Request Body:**
-
-```json
-{
-  "user_id": 1,
-  "message": "Your bank account will be blocked. Click this link urgently."
-}
-```
-
-**Response:**
-
-```json
-{
-  "is_scam": true,
-  "confidence": 0.92,
-  "reason": "Urgent threat and suspicious link pattern"
-}
-```
-
----
-
-## ☁️ Deployment
-
-* Compatible with platforms like **Render, Railway, Fly.io, AWS, GCP**
-* Ensure:
-
-  * `requirements.txt` is present
-  * DB connections are disabled or environment-based
-  * Correct start command:
-
-    ```
-    uvicorn main:app --host 0.0.0.0 --port 8000
-    ```
-
----
-
-## 🔒 Security Notes
-
-* Do not commit `.env` files
-* Use environment variables for secrets
-* Add authentication & rate limiting for production use
-
----
-
-## 📌 Future Improvements
-
-* JWT-based authentication
-* Role-based access control
-* Logging & monitoring
-* AI model upgrades
-* Frontend integration
-
----
-
-## 👩‍💻 Author
-
-**Neha Mhatre**
-Backend Developer | API & Data Enthusiast
-
----
-
-## ⭐ Support
-
-If you like this project, consider giving it a ⭐ on GitHub!
-
----
-
-> *Rakshak AI – Building safer digital communication through intelligent backend systems.*
+# Open frontend
+open frontend/index.html
+  
+👩‍💻 Author
+Neha Mhatre – Aspiring full‑stack developer building AI‑powered web applications
