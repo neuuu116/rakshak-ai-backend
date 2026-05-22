@@ -17,7 +17,8 @@ async function detectScam() {
     // Try REAL API CALL
     let data;
     try {
-      const response = await fetch("http://127.0.0.1:8000/detect", {
+  const response = await fetch("https://rakshak-ai-backend-3t33.onrender.com/detect", {
+
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ user_id: 1, message: msg })
